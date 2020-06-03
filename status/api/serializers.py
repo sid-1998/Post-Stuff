@@ -14,14 +14,14 @@ class StatusSerializer(serializers.ModelSerializer):
     # def validate_content(self, value):
     #     if len(value)  < 10:
     #         raise serializers.ValidationError("Atleast write somethining dude")
-    
-    def validate(self, data):
-        content = data.get('content', None)
-        if content == '':
-            content = None
+    #     return value
+    # def validate(self, data):
+    #     content = data.get('content', None)
+    #     if content == '':
+    #         content = None
 
-        image = data.get('image')
-        if content is None and image is None:
-            raise serializers.ValidationError("Content or image is required")
+    #     image = data.get('image', None)
+    #     if content is None and image is None:
+    #         raise serializers.ValidationError("Content or image is required")
 
-        return data
+    #     return data
