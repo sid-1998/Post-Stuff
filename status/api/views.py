@@ -4,6 +4,7 @@ from rest_framework.response import Response
 
 from status.models import Status
 from status.api.serializers import StatusSerializer
+from django.shortcuts import get_object_or_404, get_list_or_404
 
 # class ListSearchAPIView(APIView):
 #     permission_classes = []
@@ -21,3 +22,28 @@ class StatusListAPIView(generics.ListAPIView):
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
 
+class StatusCreateAPIView(generics.CreateAPIView):
+    permission_classes = []
+    authentication_classes = []
+    queryset = Status.objects.all()
+    serializer_class = StatusSerializer
+
+class StatusDetailAPIView(generics.RetrieveAPIView):
+    permission_classes = []
+    authentication_classes = []
+    queryset = Status.objects.all()
+    serializer_class = StatusSerializer
+
+'''
+to get statuses of a particular user using its username
+'''
+class UserStatusAPIView(generics.ListAPIView):
+    permission_classes = []
+    authentication_classes = []
+    serializer_class = StatusSerializer
+    def get_queryset(self):
+        kwargs = self.kwargs
+        username = kwargs.get('name')# picks name from the kwargs dict passed by url
+        qs = Status.objects.filter(user__username=username)## filter on the basis of name
+        obj = get_list_or_404(qs)#get list of objects in queryset or raise a 404
+        return obj
