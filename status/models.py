@@ -12,7 +12,7 @@ class Status(models.Model):
     created_at = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.content)[:50]
+        return str(self.pk)
 
     class Meta:
         verbose_name = 'Status Post'

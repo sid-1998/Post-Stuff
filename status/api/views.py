@@ -47,3 +47,15 @@ class UserStatusAPIView(generics.ListAPIView):
         qs = Status.objects.filter(user__username=username)## filter on the basis of name
         obj = get_list_or_404(qs)#get list of objects in queryset or raise a 404
         return obj
+
+class StatusUpdateAPIView(generics.UpdateAPIView):
+    permission_classes = []
+    authentication_classes = []
+    queryset = Status.objects.all()
+    serializer_class = StatusSerializer
+
+class StatusDeleteAPIView(generics.DestroyAPIView):
+    permission_classes = []
+    authentication_classes = []
+    queryset = Status.objects.all()
+    serializer_class = StatusSerializer
