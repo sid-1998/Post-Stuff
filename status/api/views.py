@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -28,11 +28,11 @@ class StatusCreateAPIView(generics.CreateAPIView):
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
 
-class StatusDetailAPIView(generics.RetrieveAPIView):
-    permission_classes = []
-    authentication_classes = []
-    queryset = Status.objects.all()
-    serializer_class = StatusSerializer
+# class StatusDetailAPIView(generics.RetrieveAPIView):
+#     permission_classes = []
+#     authentication_classes = []
+#     queryset = Status.objects.all()
+#     serializer_class = StatusSerializer
 
 '''
 to get statuses of a particular user using its username
@@ -55,6 +55,40 @@ class StatusUpdateAPIView(generics.UpdateAPIView):
     serializer_class = StatusSerializer
 
 class StatusDeleteAPIView(generics.DestroyAPIView):
+    permission_classes = []
+    authentication_classes = []
+    queryset = Status.objects.all()
+    serializer_class = StatusSerializer
+
+'''
+using mixins to combine functioinalities
+'''
+class StatusAPIView(mixins.CreateModelMixin, generics.ListAPIView):
+    permission_classes = []
+    authentication_classes = []
+    queryset = Status.objects.all()
+    serializer_class = StatusSerializer
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)#builtin method in CreateModelMixin to create and save new model instance
+
+
+# class StatusDetailAPIView(mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.RetrieveAPIView):
+#     permission_classes = []
+#     authentication_classes = []
+#     queryset = Status.objects.all()
+#     serializer_class = StatusSerializer
+
+#     def put(self, request, *args, **kwargs):
+#         return self.update(request, *args, **kwargs)
+
+#     def delete(self, request, *args, **kwargs):
+#         return self.destroy(request, *args, **kwargs)
+
+''' 
+DRF provides a built-in generic view called RetrieveUpdateDestryAPIView to do the same
+'''
+class StatusDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = []
     authentication_classes = []
     queryset = Status.objects.all()
