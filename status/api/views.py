@@ -47,6 +47,12 @@ class UserStatusAPIView(generics.ListAPIView):
         qs = Status.objects.filter(user__username=username)## filter on the basis of name
         obj = get_list_or_404(qs)#get list of objects in queryset or raise a 404
         return obj
+        # request = self.request
+        # username = request.GET.get('name', None)
+        # if username is not None:
+        #     qs = Status.objects.filter(user__username=username)
+        #     return qs
+        # return None
 
 class StatusUpdateAPIView(generics.UpdateAPIView):
     permission_classes = []
@@ -93,3 +99,34 @@ class StatusDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = []
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
+
+
+'''
+one view to do all
+'''
+
+class OneForALL(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.ListAPIView):
+    permission_classes = []
+    authentication_classes = []
+    queryset = Status.objects.all()
+    serializer_class = StatusSerializer
+    
+    def get_object(self):
+        request = self.request
+        passed_id = request.GET.get('id', None)
+        obj = get_object_or_404(Status, id=passed_id)
+        self.check_object_permissions(request, obj)
+        return obj
+    # list and retrieve
+    def get(self, request, *args, **kwargs):
+        passed_id = request.GET.get('id', None)
+        if passed_id is not None:
+            return self.retrieve(self, request, *args, **kwargs)# if id is passed call retrieve to get the specific object
+
+        return super().get(request, *args, **kwargs)#if no id is passed call the default get method of ListAPIView class
+    # create
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
