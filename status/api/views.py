@@ -1,7 +1,7 @@
-from rest_framework import generics, mixins
+from rest_framework import generics, mixins, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from rest_framework.authentication import SessionAuthentication
 from status.models import Status
 from status.api.serializers import StatusSerializer
 from django.shortcuts import get_object_or_404, get_list_or_404
@@ -107,11 +107,12 @@ one view to do all
 
 
 class OneForALL(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.ListAPIView):
-    permission_classes = []
-    authentication_classes = []
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [SessionAuthentication]
     serializer_class = StatusSerializer
     def get_queryset(self):
         request = self.request
+        print(request.user.username)
         ## check if user has passed username parameter to filter stuff of a particular user
         username = request.GET.get('name', None)
         if username is not None:
@@ -137,7 +138,6 @@ class OneForALL(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.Updat
         return self.create(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
-        passed_id = request.GET.get('id', None)
         '''
         this code can be used to create an object if it does not exist using put method
         '''
@@ -149,3 +149,6 @@ class OneForALL(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.Updat
     
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

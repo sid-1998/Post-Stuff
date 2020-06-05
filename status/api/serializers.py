@@ -5,6 +5,7 @@ class StatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Status
         fields = ['id', 'user', 'content', 'image']
+        read_only_fields = ['user']
 
 
     '''
