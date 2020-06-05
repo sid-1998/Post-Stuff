@@ -137,6 +137,14 @@ class OneForALL(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.Updat
         return self.create(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
+        passed_id = request.GET.get('id', None)
+        '''
+        this code can be used to create an object if it does not exist using put method
+        '''
+        # try:
+        #     obj = Status.objects.get(id=passed_id)
+        # except:
+        #     return self.create(request, *args, **kwargs)
         return self.update(request, *args, **kwargs)
     
     def delete(self, request, *args, **kwargs):
