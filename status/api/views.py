@@ -105,12 +105,20 @@ class StatusDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 one view to do all
 '''
 
+
 class OneForALL(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.ListAPIView):
     permission_classes = []
     authentication_classes = []
-    queryset = Status.objects.all()
     serializer_class = StatusSerializer
-    
+    def get_queryset(self):
+        request = self.request
+        ## check if user has passed username parameter to filter stuff of a particular user
+        username = request.GET.get('name', None)
+        if username is not None:
+            qs = Status.objects.filter(user__username=username)
+            return qs
+        return Status.objects.all()
+
     def get_object(self):
         request = self.request
         passed_id = request.GET.get('id', None)
@@ -130,3 +138,6 @@ class OneForALL(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.Updat
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
+    
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)

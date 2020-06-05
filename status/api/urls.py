@@ -14,6 +14,6 @@ urlpatterns = [
     # path('<int:pk>/delete/', StatusDeleteAPIView.as_view()),
 
     path('', OneForALL.as_view()),
-    path('<str:name>/', UserStatusAPIView.as_view()),
+    # path('<str:name>/', UserStatusAPIView.as_view()),
 
 ]
