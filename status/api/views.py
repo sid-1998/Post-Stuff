@@ -108,7 +108,7 @@ one view to do all
 
 class OneForALL(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [SessionAuthentication]
+    
     serializer_class = StatusSerializer
     def get_queryset(self):
         request = self.request
