@@ -112,7 +112,7 @@ class OneForALL(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.Updat
     serializer_class = StatusSerializer
     def get_queryset(self):
         request = self.request
-        print(request.user.username)
+        
         ## check if user has passed username parameter to filter stuff of a particular user
         username = request.GET.get('name', None)
         if username is not None:

@@ -2,6 +2,7 @@ from rest_framework import serializers
 from status.models import Status
 
 class StatusSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')#to display username instead of user id
     class Meta:
         model = Status
         fields = ['id', 'user', 'content', 'image']
