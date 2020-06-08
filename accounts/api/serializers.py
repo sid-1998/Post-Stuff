@@ -1,15 +1,26 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True)
+    token  = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'password2']
+        fields = ['username', 'email', 'password', 'password2', 'token']
 
         extra_kwargs = {'password': {'write_only':True}}
+    ## creating token manually to be sent on the time of registeration
+    def get_token(self, obj):
+        refresh = RefreshToken.for_user(obj)
+
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
 
     def validate_username(self, value):
         qs = User.objects.filter(username__iexact=value)
