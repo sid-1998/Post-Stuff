@@ -10,21 +10,27 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from statusapi.settings import SIMPLE_JWT
 
 import datetime
-
+import json
 
 User = get_user_model()
 
 ## creating subclass to add some extra content to be sent
 class MyTokenObtainPairSerailizer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-        token['expires'] = str(timezone.now() + SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'])
-        token['name'] = user.username
-        print(token['expires'], token['name'] )
-        print('x')
 
-        return token
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        refresh = self.get_token(self.user) # get refresh token by passing user instance
+        data['refresh'] = str(refresh)
+        data['access'] = str(refresh.access_token) # using refresh token to generate access token
+
+        # Add extra responses 
+        data['username'] = self.user.username
+        data['expires'] = str(timezone.now() + SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'])
+
+        return data
+    
+
+        
 
 
 
