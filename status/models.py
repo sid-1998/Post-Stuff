@@ -17,3 +17,8 @@ class Status(models.Model):
     class Meta:
         verbose_name = 'Status Post'
         verbose_name_plural = 'Status Posts'
+
+    ## a new property named owner, used in IsOwnerOrReadOnly permission
+    @property
+    def owner(self):
+        return self.user
