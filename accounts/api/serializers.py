@@ -20,8 +20,9 @@ class MyTokenObtainPairSerailizer(TokenObtainPairSerializer):
     def validate(self, attrs):
         data = super().validate(attrs)
         refresh = self.get_token(self.user) # get refresh token by passing user instance
+        
         data['refresh'] = str(refresh)
-        data['access'] = str(refresh.access_token) # using refresh token to generate access token
+        data['access'] = str(refresh.access_token) 
 
         # Add extra responses 
         data['username'] = self.user.username
@@ -38,6 +39,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True)
     token  = serializers.SerializerMethodField(read_only=True)
     expires = serializers.SerializerMethodField(read_only=True)
+    message = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = User
         fields = [
@@ -47,22 +49,26 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             'password2', 
             'token',
             'expires',
+            'message',
             ]
 
         extra_kwargs = {'password': {'write_only':True}}
     
     ## creating token manually to be sent on the time of registeration
-    def get_token(self, obj):
-        refresh = RefreshToken.for_user(obj)
+    def get_token(self, user):
+        refresh = RefreshToken.for_user(user)
 
         return {
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         }
 
-    def get_expires(self, obj):
-        expires = SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
+    def get_expires(self, user):
+        expires = timezone.now() + SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
         return expires
+
+    def get_message(self, user):
+        return "Thank you for registering. Enjoy the API."
 
     def validate_username(self, value):
         qs = User.objects.filter(username__iexact=value)
