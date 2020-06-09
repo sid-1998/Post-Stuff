@@ -9,6 +9,9 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from statusapi.settings import SIMPLE_JWT
 
+
+from status.models import Status
+
 import datetime
 import json
 
@@ -31,7 +34,14 @@ class MyTokenObtainPairSerailizer(TokenObtainPairSerializer):
         return data
     
 
-        
+class UserPublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'username',
+            'email',
+        ]
 
 
 

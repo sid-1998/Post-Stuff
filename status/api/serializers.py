@@ -1,8 +1,21 @@
 from rest_framework import serializers
+
 from status.models import Status
+from accounts.api.serializers import UserPublicSerializer
+
+
+class UserStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Status
+        fields = [
+            'id',
+            'content',
+            'image'
+        ]
 
 class StatusSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.username')#to display username instead of user id
+    # user = serializers.ReadOnlyField(source='user.username')#to display username instead of user id
+    user = UserPublicSerializer()
     class Meta:
         model = Status
         fields = ['id', 'user', 'content', 'image']
