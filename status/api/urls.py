@@ -7,10 +7,10 @@ from status.api.views import (
                             )
 
 
-
+app_name = 'api-status'
 urlpatterns = [
     path('', StatusAPIView.as_view()),
-    path('<int:pk>/', StatusDetailAPIView.as_view()),
+    path('<int:pk>/', StatusDetailAPIView.as_view(), name='detail'),
     # path('', StatusListAPIView.as_view()),
     # path('create/', StatusCreateAPIView.as_view()),
     

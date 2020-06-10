@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from rest_framework import serializers
+from rest_framework.reverse import reverse as api_reverse
 
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -33,15 +34,21 @@ class MyTokenObtainPairSerailizer(TokenObtainPairSerializer):
 
         return data
     
-
+## to display user data in status list 
 class UserPublicSerializer(serializers.ModelSerializer):
+    uri = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = User
         fields = [
             'id',
+            'uri',
             'username',
             'email',
         ]
+
+    def get_uri(self, obj):
+        return api_reverse('api-user:detail', kwargs={'username':obj.username}, request = self.context.get('request'))
+
 
 
 

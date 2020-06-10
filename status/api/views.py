@@ -14,7 +14,6 @@ from accounts.api.permissions import IsOwnerOrReadOnly
 using mixins to combine functioinalities
 '''
 class StatusAPIView(mixins.CreateModelMixin, generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
     serializer_class = StatusSerializer
 
     def get_queryset(self):
@@ -34,7 +33,7 @@ class StatusAPIView(mixins.CreateModelMixin, generics.ListAPIView):
 DRF provides a built-in generic view called RetrieveUpdateDestryAPIView to do the same
 '''
 class StatusDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
 
