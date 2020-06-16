@@ -9,8 +9,8 @@ from accounts.api.serializers import UserPublicSerializer
 
 class StatusSerializer(serializers.ModelSerializer):
     uri = serializers.SerializerMethodField(read_only=True)
-    # user = serializers.ReadOnlyField(source='user.username')#to display username instead of user id
-    user = UserPublicSerializer()
+    user = serializers.ReadOnlyField(source='user.username')#to display username instead of user id
+    # user = UserPublicSerializer()
     class Meta:
         model = Status
         fields = ['id', 'uri', 'user', 'content', 'image']

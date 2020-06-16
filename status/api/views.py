@@ -37,6 +37,11 @@ class StatusDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
 
+    def delete(self, request, *args, **kwargs):
+        obj = Status.objects.get(pk=kwargs.get('pk'))
+        obj.image.delete()
+        return self.destroy(request, *args, **kwargs)
+
 # class StatusDetailAPIView(mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.RetrieveAPIView):
 #     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     
