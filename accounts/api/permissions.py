@@ -8,7 +8,7 @@ class AnonPermissionOnly(permissions.BasePermission):
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
-    message = "You should be the owner of the post to edit it."
+    message = "You should be the owner of the post to edit/delete it."
 
     def has_object_permission(self, request, view, obj):
 
